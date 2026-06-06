@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la \"E:/11照片/2026花盆/\" 2>/dev/null || echo \"Directory not found\")",
+      "Read(//e/11照片/2026花盆/**)",
+      "Bash(ls -la \"E:/11照片/2026花盆/导出/\" 2>/dev/null || echo \"Directory not found\")",
+      "Read(//e/11照片/2026花盆/导出/**)",
+      "Bash(unzip -l \"../2026伟达花盆产品图.xlsx\")"
+    ]
+  }
+}
