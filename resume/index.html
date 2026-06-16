@@ -5,31 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>个人简历 - 张三</title>
 <style>
-/* ===== 变量与基础 ===== */
+/* ===== 变量体系 ===== */
 :root {
-  --bg: #fafaf9;
-  --card: #ffffff;
-  --text: #1c1917;
-  --text-secondary: #57534e;
+  /* 亮色主题 */
+  --bg: #f8fafc;
+  --bg-rgb: 248,250,252;
+  --card: rgba(255,255,255,0.72);
+  --card-hover: rgba(255,255,255,0.88);
+  --text: #0f172a;
+  --text-secondary: #475569;
   --accent: #2563eb;
-  --accent-light: #dbeafe;
-  --border: #e7e5e4;
-  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-  --shadow-md: 0 4px 6px rgba(0,0,0,.05), 0 2px 4px rgba(0,0,0,.04);
-  --radius: 12px;
-  --max-w: 800px;
-  --transition: 0.3s cubic-bezier(.4,0,.2,1);
+  --accent-2: #7c3aed;
+  --accent-light: rgba(37,99,235,0.08);
+  --border: rgba(148,163,184,0.2);
+  --border-strong: rgba(148,163,184,0.35);
+  --shadow: 0 1px 3px rgba(0,0,0,.04), 0 1px 2px rgba(0,0,0,.03);
+  --shadow-md: 0 8px 30px rgba(0,0,0,.06);
+  --radius: 14px;
+  --max-w: 820px;
+  --transition: 0.35s cubic-bezier(.4,0,.2,1);
+  /* 玻璃拟态 */
+  --glass-bg: rgba(255,255,255,0.58);
+  --glass-border: rgba(148,163,184,0.18);
+  --glass-blur: 16px;
+  /* 光效 */
+  --glow-rgb: 37,99,235;
+  --glow-opacity: 0.12;
 }
+
 .dark {
-  --bg: #0c0a09;
-  --card: #1c1917;
-  --text: #fafaf9;
+  --bg: #0b0b0a;
+  --bg-rgb: 11,11,10;
+  --card: rgba(28,27,24,0.72);
+  --card-hover: rgba(28,27,24,0.9);
+  --text: #f4efe3;
   --text-secondary: #a8a29e;
   --accent: #60a5fa;
-  --accent-light: #1e293b;
-  --border: #292524;
-  --shadow: 0 1px 3px rgba(0,0,0,.3);
-  --shadow-md: 0 4px 6px rgba(0,0,0,.4);
+  --accent-2: #a78bfa;
+  --accent-light: rgba(96,165,250,0.1);
+  --border: rgba(120,113,108,0.18);
+  --border-strong: rgba(120,113,108,0.32);
+  --shadow: 0 1px 3px rgba(0,0,0,.2);
+  --shadow-md: 0 8px 30px rgba(0,0,0,.35);
+  --glass-bg: rgba(28,27,24,0.55);
+  --glass-border: rgba(120,113,108,0.2);
+  --glass-blur: 20px;
+  --glow-rgb: 96,165,250;
+  --glow-opacity: 0.18;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,154 +60,284 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
   background: var(--bg);
   color: var(--text);
-  line-height: 1.7;
+  line-height: 1.72;
   transition: background var(--transition), color var(--transition);
+  position: relative;
+  overflow-x: hidden;
 }
+
+/* ===== 网格背景纹理（lizuju风格） ===== */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(var(--glow-rgb), 0.025) 1px, transparent 1px) 0 0 / 72px 72px,
+    linear-gradient(180deg, rgba(var(--glow-rgb), 0.018) 1px, transparent 1px) 0 0 / 72px 72px;
+  transition: background var(--transition);
+}
+
+/* ===== 全局鼠标光晕（lizuju风格） ===== */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--glow-rgb), var(--glow-opacity)), transparent 70%);
+  transition: background-color var(--transition);
+  opacity: 0;
+  animation: glowFadeIn 1s ease 0.5s forwards;
+}
+@keyframes glowFadeIn { to { opacity: 1; } }
+
 a { color: var(--accent); text-decoration: none; }
 
-/* ===== 导航栏 ===== */
+/* ===== 导航栏（玻璃拟态） ===== */
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: var(--bg); border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  padding: 0 20px; height: 52px; display: flex; align-items: center; justify-content: center;
-  transition: background var(--transition);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom: 1px solid var(--glass-border);
+  padding: 0 20px; height: 54px; display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
 }
 .nav-inner {
   max-width: var(--max-w); width: 100%; display: flex; align-items: center; justify-content: space-between;
 }
-.nav-links { display: flex; gap: 20px; list-style: none; font-size: 14px; }
-.nav-links a { color: var(--text-secondary); transition: color var(--transition); }
+.nav-links { display: flex; gap: 24px; list-style: none; font-size: 14px; }
+.nav-links a {
+  color: var(--text-secondary); font-weight: 500; transition: color var(--transition);
+  position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-radius: 1px; transition: width 0.25s ease;
+}
 .nav-links a:hover { color: var(--accent); }
+.nav-links a:hover::after { width: 100%; }
 .nav-actions { display: flex; gap: 8px; align-items: center; }
 .nav-actions button {
-  background: none; border: 1px solid var(--border); color: var(--text-secondary);
-  padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 13px;
-  transition: all var(--transition);
+  background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-secondary);
+  padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500;
+  transition: all var(--transition); backdrop-filter: blur(8px);
 }
-.nav-actions button:hover { border-color: var(--accent); color: var(--accent); }
-.nav-actions button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.nav-actions button:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 2px 12px rgba(var(--glow-rgb),0.15); }
+.nav-actions button.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; border-color: transparent; }
 
 /* ===== 主体容器 ===== */
-.container { max-width: var(--max-w); margin: 0 auto; padding: 72px 20px 60px; }
+.container { max-width: var(--max-w); margin: 0 auto; padding: 80px 20px 60px; }
 
-/* ===== 头部 Hero ===== */
+/* ===== Hero 区域 ===== */
+.hero-wrap {
+  position: relative; padding: 40px 0 24px;
+  overflow: hidden; border-radius: var(--radius);
+}
+/* 固定光斑（MrYang风格） */
+.hero-wrap::before {
+  content: ''; position: absolute; top: -10%; right: -5%; width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(var(--glow-rgb), 0.13) 0%, transparent 70%);
+  border-radius: 50%; pointer-events: none; z-index: 0;
+}
+.hero-wrap::after {
+  content: ''; position: absolute; bottom: 0; left: -5%; width: 340px; height: 340px;
+  background: radial-gradient(circle, rgba(var(--glow-rgb), 0.08) 0%, transparent 70%);
+  border-radius: 50%; pointer-events: none; z-index: 0;
+}
+/* 鼠标跟踪光斑 */
+.hero-spot {
+  position: absolute; width: 500px; height: 500px; border-radius: 50%; pointer-events: none; z-index: 0;
+  background: radial-gradient(circle, rgba(var(--glow-rgb), 0.14) 0%, transparent 70%);
+  transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.6s ease;
+}
+.hero-wrap:hover .hero-spot { opacity: 1; }
+
 .hero {
-  text-align: center; padding: 60px 0 40px;
+  position: relative; z-index: 1; text-align: center;
+  padding: 48px 32px 36px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
   opacity: 0; transform: translateY(20px); animation: fadeInUp .6s ease forwards;
 }
 @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-.hero .avatar {
-  width: 100px; height: 100px; border-radius: 50%; background: var(--accent-light);
-  margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
-  font-size: 40px; color: var(--accent); font-weight: 700;
+
+.hero-badge {
+  display: inline-block; padding: 6px 18px; border-radius: 40px;
+  background: var(--accent-light); color: var(--accent);
+  font-size: 13px; font-weight: 600; margin-bottom: 20px;
 }
-.hero h1 { font-size: 36px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.5px; }
-.hero .tagline { color: var(--text-secondary); font-size: 17px; margin-bottom: 16px; min-height: 24px; }
+.hero .avatar {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
+  font-size: 40px; color: #fff; font-weight: 700;
+  box-shadow: 0 8px 32px rgba(var(--glow-rgb), 0.25);
+}
+.hero h1 { font-size: 38px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+.hero h1 .highlight {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background-clip: text; -webkit-background-clip: text; color: transparent;
+}
+.hero .tagline { color: var(--text-secondary); font-size: 17px; margin-bottom: 18px; min-height: 26px; }
 .hero .tagline .cursor { display: inline-block; width: 2px; height: 20px; background: var(--accent); vertical-align: text-bottom; animation: blink .8s infinite; }
 @keyframes blink { 50% { opacity: 0; } }
-.hero .contact-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; font-size: 14px; color: var(--text-secondary); }
-.hero .contact-row span { display: flex; align-items: center; gap: 4px; }
+.hero .contact-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px; font-size: 14px; color: var(--text-secondary); }
+.hero .contact-row span { display: flex; align-items: center; gap: 5px; }
 
 /* ===== 区块通用 ===== */
 .section {
-  margin-bottom: 40px; padding: 32px; background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius); box-shadow: var(--shadow);
-  transition: background var(--transition), border var(--transition), box-shadow var(--transition);
+  margin-bottom: 32px; padding: 32px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: all var(--transition);
   opacity: 0; transform: translateY(30px);
+  position: relative; z-index: 1;
 }
 .section.visible { animation: fadeInUp .5s ease forwards; }
-.section:hover { box-shadow: var(--shadow-md); }
+.section:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+  background: var(--card-hover);
+}
+
+/* 区块标题（MrYang闪光动画） */
 .section h2 {
-  font-size: 20px; font-weight: 700; margin-bottom: 20px;
-  display: flex; align-items: center; gap: 10px;
+  font-size: 22px; font-weight: 700; margin-bottom: 22px;
+  display: flex; align-items: center; gap: 12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent));
+  background-size: 200% auto;
+  background-clip: text; -webkit-background-clip: text; color: transparent;
+  animation: titleShimmer 4s ease-in-out infinite;
 }
-.section h2::before { content: ''; display: block; width: 4px; height: 20px; background: var(--accent); border-radius: 2px; }
+.section h2::before { content: ''; display: block; width: 4px; height: 22px; background: linear-gradient(180deg, var(--accent), var(--accent-2)); border-radius: 2px; flex-shrink: 0; }
+@keyframes titleShimmer {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 200% center; }
+}
 
-/* ===== 时间线（经验/教育） ===== */
-.timeline { position: relative; padding-left: 24px; }
-.timeline::before { content: ''; position: absolute; left: 8px; top: 4px; bottom: 4px; width: 2px; background: var(--border); border-radius: 1px; }
-.timeline-item { position: relative; margin-bottom: 24px; }
+/* ===== 时间线 ===== */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before { content: ''; position: absolute; left: 9px; top: 4px; bottom: 4px; width: 2px; background: var(--border); border-radius: 1px; }
+.timeline-item { position: relative; margin-bottom: 28px; }
 .timeline-item:last-child { margin-bottom: 0; }
-.timeline-item::before { content: ''; position: absolute; left: -20px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); border: 2px solid var(--card); }
-.timeline-item .period { font-size: 13px; color: var(--accent); font-weight: 600; margin-bottom: 2px; }
+.timeline-item::before { content: ''; position: absolute; left: -23px; top: 7px; width: 12px; height: 12px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); border: 2px solid var(--card); }
+.timeline-item .period { font-size: 13px; color: var(--accent); font-weight: 600; margin-bottom: 3px; }
 .timeline-item h3 { font-size: 17px; font-weight: 700; }
-.timeline-item .sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 6px; }
-.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+.timeline-item .sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 7px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
 
-/* ===== 技能 ===== */
-.skills-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+/* ===== 技能标签（MrYang风格） ===== */
+.skills-grid { display: flex; flex-wrap: wrap; gap: 12px; }
 .skill-tag {
-  background: var(--accent-light); color: var(--accent); padding: 6px 16px;
-  border-radius: 20px; font-size: 14px; font-weight: 500;
-  transition: transform var(--transition);
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  color: var(--text-secondary);
+  padding: 9px 20px; border-radius: 40px; font-size: 14px; font-weight: 500;
+  border: 1px solid var(--glass-border);
+  transition: all var(--transition); cursor: default;
 }
-.skill-tag:hover { transform: translateY(-2px); }
+.skill-tag:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(var(--glow-rgb), 0.2);
+}
+.skill-tag.core {
+  background: var(--accent-light);
+  border-color: rgba(var(--glow-rgb), 0.25);
+  color: var(--accent);
+}
 
 /* ===== 项目卡片 ===== */
-.projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
 .project-card {
-  border: 1px solid var(--border); border-radius: var(--radius); padding: 20px;
-  transition: border-color var(--transition), box-shadow var(--transition);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius); padding: 22px;
+  transition: all var(--transition);
 }
-.project-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); }
-.project-card h3 { font-size: 16px; margin-bottom: 6px; }
-.project-card p { font-size: 14px; color: var(--text-secondary); }
-.project-card .tech { font-size: 12px; color: var(--accent); margin-top: 8px; }
+.project-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 12px 32px rgba(var(--glow-rgb), 0.13);
+  transform: translateY(-2px);
+}
+.project-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.project-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+.project-card .tech { font-size: 12px; color: var(--accent); margin-top: 10px; font-weight: 500; display: flex; flex-wrap: wrap; gap: 6px; }
+.project-card .tech span {
+  background: var(--accent-light); padding: 3px 10px; border-radius: 12px;
+  border: 1px solid rgba(var(--glow-rgb), 0.15);
+}
 
 /* ===== 可编辑状态 ===== */
 body.editing [contenteditable] {
   outline: 2px dashed var(--accent); outline-offset: 2px; border-radius: 4px;
-  padding: 2px 4px; transition: outline .15s; cursor: text;
+  padding: 2px 4px; cursor: text;
 }
 body.editing [contenteditable]:focus { outline-style: solid; background: var(--accent-light); }
 .edit-hint {
-  display: none; text-align: center; padding: 8px; font-size: 13px; color: var(--accent);
-  position: fixed; top: 56px; left: 50%; transform: translateX(-50%); z-index: 99;
-  background: var(--accent-light); border-radius: 20px; padding: 6px 20px;
+  display: none; text-align: center;
+  position: fixed; top: 60px; left: 50%; transform: translateX(-50%); z-index: 99;
+  background: var(--accent-light); color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 20px; padding: 6px 22px; font-size: 13px; font-weight: 500;
+  backdrop-filter: blur(12px);
 }
 body.editing .edit-hint { display: block; animation: fadeInUp .3s ease; }
 
 /* ===== 按钮 ===== */
 .btn {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 500;
-  cursor: pointer; border: 1px solid var(--border); background: var(--card); color: var(--text);
-  transition: all var(--transition);
+  padding: 10px 22px; border-radius: 24px; font-size: 14px; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--glass-border);
+  background: var(--glass-bg); color: var(--text);
+  transition: all var(--transition); backdrop-filter: blur(8px);
 }
-.btn:hover { border-color: var(--accent); color: var(--accent); }
-.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-.btn-primary:hover { opacity: .9; }
+.btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 4px 16px rgba(var(--glow-rgb),0.15); }
+.btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; border-color: transparent; }
+.btn-primary:hover { opacity: .92; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(var(--glow-rgb),0.35); }
 
 /* ===== 页脚 ===== */
-.footer { text-align: center; padding: 40px 0; color: var(--text-secondary); font-size: 13px; }
+.footer { text-align: center; padding: 44px 0 30px; color: var(--text-secondary); font-size: 13px; }
 
 /* ===== 响应式 ===== */
 @media (max-width: 640px) {
-  .container { padding: 64px 12px 40px; }
-  .section { padding: 20px; }
-  .hero { padding: 40px 0 24px; }
+  .container { padding: 68px 12px 36px; }
+  .section { padding: 20px; margin-bottom: 20px; }
+  .hero { padding: 32px 16px 24px; }
   .hero h1 { font-size: 28px; }
-  .nav-links { gap: 12px; font-size: 12px; }
+  .nav-links { gap: 14px; font-size: 12px; }
   .projects-grid { grid-template-columns: 1fr; }
-  .timeline { padding-left: 20px; }
+  .timeline { padding-left: 22px; }
+  .hero-wrap::before, .hero-wrap::after { width: 240px; height: 240px; }
+  .hero-spot { width: 300px; height: 300px; }
 }
 
-/* ===== 打印样式 ===== */
+/* ===== 打印 ===== */
 @media print {
-  .nav, .nav-actions button, .edit-hint, .btn-print { display: none !important; }
+  .nav, .nav-actions button, .edit-hint, .btn-print, .hero-wrap::before,
+  .hero-wrap::after, .hero-spot, body::before, body::after { display: none !important; }
   body { --bg: #fff; --card: #fff; --text: #000; --text-secondary: #333; }
+  .section, .hero { backdrop-filter: none; background: #fff; box-shadow: none; border: 1px solid #ddd; }
   .container { padding-top: 0; max-width: 100%; }
-  .section { box-shadow: none; break-inside: avoid; }
   body.editing [contenteditable] { outline: none !important; }
 }
 
 /* ===== Toast ===== */
 .toast {
   position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-  background: #1c1917; color: #fff; padding: 10px 24px; border-radius: 25px;
-  font-size: 14px; z-index: 200; opacity: 0; pointer-events: none;
-  transition: opacity .3s ease;
+  background: linear-gradient(135deg, #1e293b, #334155); color: #fff;
+  padding: 10px 24px; border-radius: 25px; font-size: 14px;
+  z-index: 200; opacity: 0; pointer-events: none; transition: opacity .3s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  border: 1px solid rgba(255,255,255,.15);
 }
 .toast.show { opacity: 1; }
 </style>
@@ -211,7 +363,7 @@ body.editing .edit-hint { display: block; animation: fadeInUp .3s ease; }
 </nav>
 
 <!-- 编辑提示 -->
-<div class="edit-hint">✏️ 编辑模式已开启 — 点击页面上的文字即可直接修改</div>
+<div class="edit-hint" id="editHint">✏️ 编辑模式已开启 — 点击页面上的文字即可直接修改</div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
@@ -220,17 +372,21 @@ body.editing .edit-hint { display: block; animation: fadeInUp .3s ease; }
 <main class="container">
 
   <!-- ===== Hero ===== -->
-  <header class="hero section" id="hero">
-    <div class="avatar">张</div>
-    <h1 contenteditable="false">张 三</h1>
-    <p class="tagline"><span id="typed"></span><span class="cursor"></span></p>
-    <div class="contact-row">
-      <span contenteditable="false">📧 zhangsan@example.com</span>
-      <span contenteditable="false">📱 138-0000-0000</span>
-      <span contenteditable="false">📍 中国 · 北京</span>
-      <span contenteditable="false">🔗 github.com/zhangsan</span>
-    </div>
-  </header>
+  <div class="hero-wrap" id="heroWrap">
+    <div class="hero-spot" id="heroSpot"></div>
+    <header class="hero" id="hero">
+      <div class="hero-badge" contenteditable="false">5 年全栈经验 · 开放新机会</div>
+      <div class="avatar">张</div>
+      <h1>Hi, 我是 <span class="highlight">张 三</span></h1>
+      <p class="tagline"><span id="typed"></span><span class="cursor"></span></p>
+      <div class="contact-row">
+        <span contenteditable="false">📧 zhangsan@example.com</span>
+        <span contenteditable="false">📱 138-0000-0000</span>
+        <span contenteditable="false">📍 中国 · 北京</span>
+        <span contenteditable="false">🔗 github.com/zhangsan</span>
+      </div>
+    </header>
+  </div>
 
   <!-- ===== 关于我 ===== -->
   <section class="section" id="about">
@@ -280,9 +436,9 @@ body.editing .edit-hint { display: block; animation: fadeInUp .3s ease; }
   <section class="section" id="skills">
     <h2>专业技能</h2>
     <div class="skills-grid">
-      <span class="skill-tag" contenteditable="false">JavaScript / TypeScript</span>
-      <span class="skill-tag" contenteditable="false">React / Next.js</span>
-      <span class="skill-tag" contenteditable="false">Vue 3 / Nuxt</span>
+      <span class="skill-tag core" contenteditable="false">JavaScript / TypeScript</span>
+      <span class="skill-tag core" contenteditable="false">React / Next.js</span>
+      <span class="skill-tag core" contenteditable="false">Vue 3 / Nuxt</span>
       <span class="skill-tag" contenteditable="false">Tailwind CSS</span>
       <span class="skill-tag" contenteditable="false">Node.js / Express</span>
       <span class="skill-tag" contenteditable="false">Python / Flask</span>
@@ -300,17 +456,17 @@ body.editing .edit-hint { display: block; animation: fadeInUp .3s ease; }
       <div class="project-card">
         <h3 contenteditable="false">企业级管理后台</h3>
         <p contenteditable="false">基于 React + Ant Design 的后台管理系统，支持权限管理、数据可视化、多语言切换。</p>
-        <div class="tech" contenteditable="false">React · TypeScript · Ant Design · ECharts</div>
+        <div class="tech"><span contenteditable="false">React</span><span contenteditable="false">TypeScript</span><span contenteditable="false">Ant Design</span><span contenteditable="false">ECharts</span></div>
       </div>
       <div class="project-card">
         <h3 contenteditable="false">电商小程序</h3>
         <p contenteditable="false">微信小程序电商平台，包含商品浏览、购物车、订单管理、支付集成等完整功能。</p>
-        <div class="tech" contenteditable="false">微信小程序 · Vant Weapp · Node.js</div>
+        <div class="tech"><span contenteditable="false">微信小程序</span><span contenteditable="false">Vant Weapp</span><span contenteditable="false">Node.js</span></div>
       </div>
       <div class="project-card">
         <h3 contenteditable="false">个人博客系统</h3>
         <p contenteditable="false">基于 Next.js 的静态博客，支持 Markdown 写作、标签分类、全文搜索。</p>
-        <div class="tech" contenteditable="false">Next.js · MDX · Tailwind CSS · Vercel</div>
+        <div class="tech"><span contenteditable="false">Next.js</span><span contenteditable="false">MDX</span><span contenteditable="false">Tailwind CSS</span><span contenteditable="false">Vercel</span></div>
       </div>
     </div>
   </section>
@@ -323,6 +479,55 @@ body.editing .edit-hint { display: block; animation: fadeInUp .3s ease; }
 
 <!-- ===== 脚本 ===== -->
 <script>
+// ===== 鼠标追踪光效（lizuju风格，带缓动） =====
+(function() {
+  const spot = document.getElementById('heroSpot');
+  const wrap = document.getElementById('heroWrap');
+  let mx = 0, my = 0;     // 目标位置
+  let cx = 0, cy = 0;     // 当前位置（缓动）
+  let rafId = null;
+  const ease = 0.08;      // 缓动系数（越小越丝滑）
+
+  // 全局鼠标跟踪（用于 body::after 光晕）
+  let gx = 0, gy = 0;
+  let gcx = window.innerWidth / 2, gcy = window.innerHeight / 2;
+
+  document.addEventListener('mousemove', function(e) {
+    // Hero 光斑
+    if (wrap) {
+      const r = wrap.getBoundingClientRect();
+      mx = e.clientX - r.left;
+      my = e.clientY - r.top;
+      if (!rafId) rafId = requestAnimationFrame(updateSpot);
+    }
+    // 全局光晕
+    gx = e.clientX;
+    gy = e.clientY;
+  });
+
+  function updateSpot() {
+    cx += (mx - cx) * ease;
+    cy += (my - cy) * ease;
+    if (spot) {
+      spot.style.left = cx + 'px';
+      spot.style.top = cy + 'px';
+    }
+    // 全局光晕缓动
+    gcx += (gx - gcx) * ease;
+    gcy += (gy - gcy) * ease;
+    document.documentElement.style.setProperty('--mouse-x', gcx + 'px');
+    document.documentElement.style.setProperty('--mouse-y', gcy + 'px');
+
+    rafId = requestAnimationFrame(updateSpot);
+  }
+
+  // 在触摸设备上禁用光效
+  if ('ontouchstart' in window) {
+    document.documentElement.style.setProperty('--mouse-x', '50%');
+    document.documentElement.style.setProperty('--mouse-y', '50%');
+  }
+})();
+
 // ===== 主题切换 =====
 function toggleTheme() {
   document.documentElement.classList.toggle('dark');
@@ -331,7 +536,6 @@ function toggleTheme() {
   btn.textContent = isDark ? '☀️ 亮色' : '🌙 暗色';
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
-// 恢复主题
 if (localStorage.getItem('theme') === 'dark') toggleTheme();
 
 // ===== 编辑模式 =====
@@ -342,7 +546,6 @@ function toggleEdit() {
   const btn = document.getElementById('btnEdit');
   btn.textContent = isEditing ? '✔️ 完成' : '✏️ 编辑';
   btn.classList.toggle('active', isEditing);
-  // 切换 contenteditable
   document.querySelectorAll('[contenteditable]').forEach(el => {
     el.contentEditable = isEditing;
   });
@@ -352,13 +555,6 @@ function toggleEdit() {
 
 // ===== 本地存储 =====
 function saveToLocal() {
-  const data = {};
-  document.querySelectorAll('[contenteditable]').forEach((el, i) => {
-    // 用路径来标识元素
-    const key = el.textContent.trim().slice(0, 30) + '_' + i;
-    data[el.closest('section')?.id || el.closest('header')?.id || 'unknown'] = true;
-  });
-  // 保存所有可编辑元素的内容
   const contents = [];
   document.querySelectorAll('[contenteditable]').forEach(el => {
     contents.push({ html: el.innerHTML, path: getElementPath(el) });
@@ -385,7 +581,6 @@ function loadFromLocal() {
   try {
     const contents = JSON.parse(localStorage.getItem('resume-contents'));
     if (!contents) return;
-    // 简单的恢复：按顺序匹配
     const editables = document.querySelectorAll('[contenteditable]');
     if (contents.length === editables.length) {
       editables.forEach((el, i) => {
@@ -413,11 +608,8 @@ let titleIdx = 0, charIdx = 0, isDeleting = false;
 function type() {
   const el = document.getElementById('typed');
   const current = titles[titleIdx];
-  if (isDeleting) {
-    el.textContent = current.slice(0, charIdx--);
-  } else {
-    el.textContent = current.slice(0, charIdx++);
-  }
+  if (isDeleting) { el.textContent = current.slice(0, charIdx--); }
+  else { el.textContent = current.slice(0, charIdx++); }
   let speed = isDeleting ? 40 : 100;
   if (!isDeleting && charIdx === current.length) { speed = 1500; isDeleting = true; }
   else if (isDeleting && charIdx === 0) { isDeleting = false; titleIdx = (titleIdx + 1) % titles.length; speed = 300; }
@@ -434,10 +626,9 @@ const observer = new IntersectionObserver((entries) => {
     }
   });
 }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
 document.querySelectorAll('.section').forEach(s => observer.observe(s));
 
-// ===== 页面加载自动显示 hero =====
+// ===== 页面加载显示首屏 =====
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.section').forEach(s => {
     const rect = s.getBoundingClientRect();
