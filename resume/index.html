@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个人简历 - 张三</title>
+<style>
+/* ===== 变量与基础 ===== */
+:root {
+  --bg: #fafaf9;
+  --card: #ffffff;
+  --text: #1c1917;
+  --text-secondary: #57534e;
+  --accent: #2563eb;
+  --accent-light: #dbeafe;
+  --border: #e7e5e4;
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,.05), 0 2px 4px rgba(0,0,0,.04);
+  --radius: 12px;
+  --max-w: 800px;
+  --transition: 0.3s cubic-bezier(.4,0,.2,1);
+}
+.dark {
+  --bg: #0c0a09;
+  --card: #1c1917;
+  --text: #fafaf9;
+  --text-secondary: #a8a29e;
+  --accent: #60a5fa;
+  --accent-light: #1e293b;
+  --border: #292524;
+  --shadow: 0 1px 3px rgba(0,0,0,.3);
+  --shadow-md: 0 4px 6px rgba(0,0,0,.4);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  transition: background var(--transition), color var(--transition);
+}
+a { color: var(--accent); text-decoration: none; }
+
+/* ===== 导航栏 ===== */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  padding: 0 20px; height: 52px; display: flex; align-items: center; justify-content: center;
+  transition: background var(--transition);
+}
+.nav-inner {
+  max-width: var(--max-w); width: 100%; display: flex; align-items: center; justify-content: space-between;
+}
+.nav-links { display: flex; gap: 20px; list-style: none; font-size: 14px; }
+.nav-links a { color: var(--text-secondary); transition: color var(--transition); }
+.nav-links a:hover { color: var(--accent); }
+.nav-actions { display: flex; gap: 8px; align-items: center; }
+.nav-actions button {
+  background: none; border: 1px solid var(--border); color: var(--text-secondary);
+  padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 13px;
+  transition: all var(--transition);
+}
+.nav-actions button:hover { border-color: var(--accent); color: var(--accent); }
+.nav-actions button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ===== 主体容器 ===== */
+.container { max-width: var(--max-w); margin: 0 auto; padding: 72px 20px 60px; }
+
+/* ===== 头部 Hero ===== */
+.hero {
+  text-align: center; padding: 60px 0 40px;
+  opacity: 0; transform: translateY(20px); animation: fadeInUp .6s ease forwards;
+}
+@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+.hero .avatar {
+  width: 100px; height: 100px; border-radius: 50%; background: var(--accent-light);
+  margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
+  font-size: 40px; color: var(--accent); font-weight: 700;
+}
+.hero h1 { font-size: 36px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.5px; }
+.hero .tagline { color: var(--text-secondary); font-size: 17px; margin-bottom: 16px; min-height: 24px; }
+.hero .tagline .cursor { display: inline-block; width: 2px; height: 20px; background: var(--accent); vertical-align: text-bottom; animation: blink .8s infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.hero .contact-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; font-size: 14px; color: var(--text-secondary); }
+.hero .contact-row span { display: flex; align-items: center; gap: 4px; }
+
+/* ===== 区块通用 ===== */
+.section {
+  margin-bottom: 40px; padding: 32px; background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  transition: background var(--transition), border var(--transition), box-shadow var(--transition);
+  opacity: 0; transform: translateY(30px);
+}
+.section.visible { animation: fadeInUp .5s ease forwards; }
+.section:hover { box-shadow: var(--shadow-md); }
+.section h2 {
+  font-size: 20px; font-weight: 700; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section h2::before { content: ''; display: block; width: 4px; height: 20px; background: var(--accent); border-radius: 2px; }
+
+/* ===== 时间线（经验/教育） ===== */
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before { content: ''; position: absolute; left: 8px; top: 4px; bottom: 4px; width: 2px; background: var(--border); border-radius: 1px; }
+.timeline-item { position: relative; margin-bottom: 24px; }
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-item::before { content: ''; position: absolute; left: -20px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); border: 2px solid var(--card); }
+.timeline-item .period { font-size: 13px; color: var(--accent); font-weight: 600; margin-bottom: 2px; }
+.timeline-item h3 { font-size: 17px; font-weight: 700; }
+.timeline-item .sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 6px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ===== 技能 ===== */
+.skills-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.skill-tag {
+  background: var(--accent-light); color: var(--accent); padding: 6px 16px;
+  border-radius: 20px; font-size: 14px; font-weight: 500;
+  transition: transform var(--transition);
+}
+.skill-tag:hover { transform: translateY(-2px); }
+
+/* ===== 项目卡片 ===== */
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+.project-card {
+  border: 1px solid var(--border); border-radius: var(--radius); padding: 20px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.project-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); }
+.project-card h3 { font-size: 16px; margin-bottom: 6px; }
+.project-card p { font-size: 14px; color: var(--text-secondary); }
+.project-card .tech { font-size: 12px; color: var(--accent); margin-top: 8px; }
+
+/* ===== 可编辑状态 ===== */
+body.editing [contenteditable] {
+  outline: 2px dashed var(--accent); outline-offset: 2px; border-radius: 4px;
+  padding: 2px 4px; transition: outline .15s; cursor: text;
+}
+body.editing [contenteditable]:focus { outline-style: solid; background: var(--accent-light); }
+.edit-hint {
+  display: none; text-align: center; padding: 8px; font-size: 13px; color: var(--accent);
+  position: fixed; top: 56px; left: 50%; transform: translateX(-50%); z-index: 99;
+  background: var(--accent-light); border-radius: 20px; padding: 6px 20px;
+}
+body.editing .edit-hint { display: block; animation: fadeInUp .3s ease; }
+
+/* ===== 按钮 ===== */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 500;
+  cursor: pointer; border: 1px solid var(--border); background: var(--card); color: var(--text);
+  transition: all var(--transition);
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn-primary:hover { opacity: .9; }
+
+/* ===== 页脚 ===== */
+.footer { text-align: center; padding: 40px 0; color: var(--text-secondary); font-size: 13px; }
+
+/* ===== 响应式 ===== */
+@media (max-width: 640px) {
+  .container { padding: 64px 12px 40px; }
+  .section { padding: 20px; }
+  .hero { padding: 40px 0 24px; }
+  .hero h1 { font-size: 28px; }
+  .nav-links { gap: 12px; font-size: 12px; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .timeline { padding-left: 20px; }
+}
+
+/* ===== 打印样式 ===== */
+@media print {
+  .nav, .nav-actions button, .edit-hint, .btn-print { display: none !important; }
+  body { --bg: #fff; --card: #fff; --text: #000; --text-secondary: #333; }
+  .container { padding-top: 0; max-width: 100%; }
+  .section { box-shadow: none; break-inside: avoid; }
+  body.editing [contenteditable] { outline: none !important; }
+}
+
+/* ===== Toast ===== */
+.toast {
+  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+  background: #1c1917; color: #fff; padding: 10px 24px; border-radius: 25px;
+  font-size: 14px; z-index: 200; opacity: 0; pointer-events: none;
+  transition: opacity .3s ease;
+}
+.toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- 导航 -->
+<nav class="nav">
+  <div class="nav-inner">
+    <ul class="nav-links">
+      <li><a href="#about">关于</a></li>
+      <li><a href="#experience">经历</a></li>
+      <li><a href="#education">教育</a></li>
+      <li><a href="#skills">技能</a></li>
+      <li><a href="#projects">项目</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button id="btnEdit" onclick="toggleEdit()" title="编辑模式">✏️ 编辑</button>
+      <button id="btnTheme" onclick="toggleTheme()" title="切换主题">🌙 暗色</button>
+      <button class="btn-print" onclick="window.print()" title="打印/导出PDF">🖨️ 打印</button>
+    </div>
+  </div>
+</nav>
+
+<!-- 编辑提示 -->
+<div class="edit-hint">✏️ 编辑模式已开启 — 点击页面上的文字即可直接修改</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- 主体 -->
+<main class="container">
+
+  <!-- ===== Hero ===== -->
+  <header class="hero section" id="hero">
+    <div class="avatar">张</div>
+    <h1 contenteditable="false">张 三</h1>
+    <p class="tagline"><span id="typed"></span><span class="cursor"></span></p>
+    <div class="contact-row">
+      <span contenteditable="false">📧 zhangsan@example.com</span>
+      <span contenteditable="false">📱 138-0000-0000</span>
+      <span contenteditable="false">📍 中国 · 北京</span>
+      <span contenteditable="false">🔗 github.com/zhangsan</span>
+    </div>
+  </header>
+
+  <!-- ===== 关于我 ===== -->
+  <section class="section" id="about">
+    <h2>关于我</h2>
+    <p contenteditable="false">拥有5年全栈开发经验的软件工程师，擅长 React、Vue、Node.js 技术栈。主导过多个从0到1的产品开发，对技术充满热情，注重代码质量和用户体验。具备良好的团队协作能力和项目管理经验，能够独立负责复杂项目的架构设计与落地实施。</p>
+  </section>
+
+  <!-- ===== 工作经历 ===== -->
+  <section class="section" id="experience">
+    <h2>工作经历</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="period" contenteditable="false">2023.03 — 至今</div>
+        <h3 contenteditable="false">高级前端工程师 · ABC科技有限公司</h3>
+        <div class="sub" contenteditable="false">北京 · 全职</div>
+        <p contenteditable="false">负责公司核心产品的Web前端架构设计与开发。使用 React + TypeScript + Tailwind CSS 构建了新一代管理后台，页面加载速度提升60%。带领3人小团队，制定前端开发规范和代码评审流程。</p>
+      </div>
+      <div class="timeline-item">
+        <div class="period" contenteditable="false">2021.07 — 2023.02</div>
+        <h3 contenteditable="false">前端开发工程师 · XYZ互联网公司</h3>
+        <div class="sub" contenteditable="false">上海 · 全职</div>
+        <p contenteditable="false">参与电商平台的移动端H5开发，使用 Vue 3 + Vant UI 完成多个营销活动页面。优化首屏加载时间从3s降至1.2s，提升用户转化率15%。</p>
+      </div>
+      <div class="timeline-item">
+        <div class="period" contenteditable="false">2020.06 — 2021.06</div>
+        <h3 contenteditable="false">初级开发工程师 · 创业公司</h3>
+        <div class="sub" contenteditable="false">深圳 · 全职</div>
+        <p contenteditable="false">负责公司官网及内部工具的开发维护，使用 HTML/CSS/JavaScript 和 Python Flask 框架。独立完成了客户管理系统的前后端开发。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 教育背景 ===== -->
+  <section class="section" id="education">
+    <h2>教育背景</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="period" contenteditable="false">2016.09 — 2020.06</div>
+        <h3 contenteditable="false">某某大学 · 计算机科学与技术</h3>
+        <div class="sub" contenteditable="false">本科 · 工学学士</div>
+        <p contenteditable="false">主修数据结构、算法设计、操作系统、计算机网络。GPA 3.8/4.0，连续三年获得校级奖学金。毕业设计：《基于深度学习的图像识别系统》。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 技能 ===== -->
+  <section class="section" id="skills">
+    <h2>专业技能</h2>
+    <div class="skills-grid">
+      <span class="skill-tag" contenteditable="false">JavaScript / TypeScript</span>
+      <span class="skill-tag" contenteditable="false">React / Next.js</span>
+      <span class="skill-tag" contenteditable="false">Vue 3 / Nuxt</span>
+      <span class="skill-tag" contenteditable="false">Tailwind CSS</span>
+      <span class="skill-tag" contenteditable="false">Node.js / Express</span>
+      <span class="skill-tag" contenteditable="false">Python / Flask</span>
+      <span class="skill-tag" contenteditable="false">MySQL / MongoDB</span>
+      <span class="skill-tag" contenteditable="false">Docker / CI/CD</span>
+      <span class="skill-tag" contenteditable="false">Git / GitHub</span>
+      <span class="skill-tag" contenteditable="false">Figma / 设计协作</span>
+    </div>
+  </section>
+
+  <!-- ===== 项目经历 ===== -->
+  <section class="section" id="projects">
+    <h2>项目经历</h2>
+    <div class="projects-grid">
+      <div class="project-card">
+        <h3 contenteditable="false">企业级管理后台</h3>
+        <p contenteditable="false">基于 React + Ant Design 的后台管理系统，支持权限管理、数据可视化、多语言切换。</p>
+        <div class="tech" contenteditable="false">React · TypeScript · Ant Design · ECharts</div>
+      </div>
+      <div class="project-card">
+        <h3 contenteditable="false">电商小程序</h3>
+        <p contenteditable="false">微信小程序电商平台，包含商品浏览、购物车、订单管理、支付集成等完整功能。</p>
+        <div class="tech" contenteditable="false">微信小程序 · Vant Weapp · Node.js</div>
+      </div>
+      <div class="project-card">
+        <h3 contenteditable="false">个人博客系统</h3>
+        <p contenteditable="false">基于 Next.js 的静态博客，支持 Markdown 写作、标签分类、全文搜索。</p>
+        <div class="tech" contenteditable="false">Next.js · MDX · Tailwind CSS · Vercel</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p contenteditable="false">© 2026 张三 · 用 ❤️ 和 HTML 构建</p>
+</footer>
+
+<!-- ===== 脚本 ===== -->
+<script>
+// ===== 主题切换 =====
+function toggleTheme() {
+  document.documentElement.classList.toggle('dark');
+  const btn = document.getElementById('btnTheme');
+  const isDark = document.documentElement.classList.contains('dark');
+  btn.textContent = isDark ? '☀️ 亮色' : '🌙 暗色';
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+// 恢复主题
+if (localStorage.getItem('theme') === 'dark') toggleTheme();
+
+// ===== 编辑模式 =====
+let isEditing = false;
+function toggleEdit() {
+  isEditing = !isEditing;
+  document.body.classList.toggle('editing', isEditing);
+  const btn = document.getElementById('btnEdit');
+  btn.textContent = isEditing ? '✔️ 完成' : '✏️ 编辑';
+  btn.classList.toggle('active', isEditing);
+  // 切换 contenteditable
+  document.querySelectorAll('[contenteditable]').forEach(el => {
+    el.contentEditable = isEditing;
+  });
+  if (!isEditing) saveToLocal();
+  showToast(isEditing ? '编辑模式已开启，点击文字即可修改' : '内容已自动保存 ✅');
+}
+
+// ===== 本地存储 =====
+function saveToLocal() {
+  const data = {};
+  document.querySelectorAll('[contenteditable]').forEach((el, i) => {
+    // 用路径来标识元素
+    const key = el.textContent.trim().slice(0, 30) + '_' + i;
+    data[el.closest('section')?.id || el.closest('header')?.id || 'unknown'] = true;
+  });
+  // 保存所有可编辑元素的内容
+  const contents = [];
+  document.querySelectorAll('[contenteditable]').forEach(el => {
+    contents.push({ html: el.innerHTML, path: getElementPath(el) });
+  });
+  localStorage.setItem('resume-contents', JSON.stringify(contents));
+}
+
+function getElementPath(el) {
+  const parts = [];
+  let node = el;
+  while (node && node !== document.body) {
+    if (node.id) { parts.unshift('#' + node.id); break; }
+    const parent = node.parentElement;
+    if (parent) {
+      const index = Array.from(parent.children).indexOf(node);
+      parts.unshift(node.tagName.toLowerCase() + ':nth-child(' + (index+1) + ')');
+    }
+    node = parent;
+  }
+  return parts.join(' > ');
+}
+
+function loadFromLocal() {
+  try {
+    const contents = JSON.parse(localStorage.getItem('resume-contents'));
+    if (!contents) return;
+    // 简单的恢复：按顺序匹配
+    const editables = document.querySelectorAll('[contenteditable]');
+    if (contents.length === editables.length) {
+      editables.forEach((el, i) => {
+        if (contents[i] && contents[i].html !== el.innerHTML) {
+          el.innerHTML = contents[i].html;
+        }
+      });
+    }
+  } catch(e) {}
+}
+loadFromLocal();
+
+// ===== Toast =====
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// ===== 打字机效果 =====
+const titles = ['全栈开发工程师', 'React / Vue 技术专家', '开源技术爱好者', '终身学习者'];
+let titleIdx = 0, charIdx = 0, isDeleting = false;
+function type() {
+  const el = document.getElementById('typed');
+  const current = titles[titleIdx];
+  if (isDeleting) {
+    el.textContent = current.slice(0, charIdx--);
+  } else {
+    el.textContent = current.slice(0, charIdx++);
+  }
+  let speed = isDeleting ? 40 : 100;
+  if (!isDeleting && charIdx === current.length) { speed = 1500; isDeleting = true; }
+  else if (isDeleting && charIdx === 0) { isDeleting = false; titleIdx = (titleIdx + 1) % titles.length; speed = 300; }
+  setTimeout(type, speed);
+}
+type();
+
+// ===== 滚动渐入动画 =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+// ===== 页面加载自动显示 hero =====
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.section').forEach(s => {
+    const rect = s.getBoundingClientRect();
+    if (rect.top < window.innerHeight) s.classList.add('visible');
+  });
+});
+</script>
+
+</body>
+</html>
