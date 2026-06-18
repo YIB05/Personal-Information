@@ -80,7 +80,7 @@ body::before {
 body::after {
   content: '';
   position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--glow-rgb), var(--glow-opacity)), transparent 70%);
+  background: radial-gradient(280px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--glow-rgb), var(--glow-opacity)), transparent 70%);
   transition: background-color var(--transition);
   opacity: 0;
   animation: glowFadeIn 1s ease 0.5s forwards;
@@ -133,18 +133,18 @@ a { color: var(--accent); text-decoration: none; }
 }
 /* 固定光斑（MrYang风格） */
 .hero-wrap::before {
-  content: ''; position: absolute; top: -10%; right: -5%; width: 420px; height: 420px;
+  content: ''; position: absolute; top: -10%; right: -5%; width: 260px; height: 260px;
   background: radial-gradient(circle, rgba(var(--glow-rgb), 0.13) 0%, transparent 70%);
   border-radius: 50%; pointer-events: none; z-index: 0;
 }
 .hero-wrap::after {
-  content: ''; position: absolute; bottom: 0; left: -5%; width: 340px; height: 340px;
+  content: ''; position: absolute; bottom: 0; left: -5%; width: 200px; height: 200px;
   background: radial-gradient(circle, rgba(var(--glow-rgb), 0.08) 0%, transparent 70%);
   border-radius: 50%; pointer-events: none; z-index: 0;
 }
 /* 鼠标跟踪光斑 */
 .hero-spot {
-  position: absolute; width: 500px; height: 500px; border-radius: 50%; pointer-events: none; z-index: 0;
+  position: absolute; width: 260px; height: 260px; border-radius: 50%; pointer-events: none; z-index: 0;
   background: radial-gradient(circle, rgba(var(--glow-rgb), 0.14) 0%, transparent 70%);
   transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.6s ease;
 }
@@ -316,8 +316,8 @@ body.editing .edit-hint { display: block; animation: fadeInUp .3s ease; }
   .nav-links { gap: 14px; font-size: 12px; }
   .projects-grid { grid-template-columns: 1fr; }
   .timeline { padding-left: 22px; }
-  .hero-wrap::before, .hero-wrap::after { width: 240px; height: 240px; }
-  .hero-spot { width: 300px; height: 300px; }
+  .hero-wrap::before, .hero-wrap::after { width: 160px; height: 160px; }
+  .hero-spot { width: 180px; height: 180px; }
 }
 
 /* ===== 打印 ===== */
@@ -486,7 +486,7 @@ body.editing .edit-hint { display: block; animation: fadeInUp .3s ease; }
   let mx = 0, my = 0;     // 目标位置
   let cx = 0, cy = 0;     // 当前位置（缓动）
   let rafId = null;
-  const ease = 0.08;      // 缓动系数（越小越丝滑）
+  const ease = 0.16;      // 缓动系数（越大跟踪越快）
 
   // 全局鼠标跟踪（用于 body::after 光晕）
   let gx = 0, gy = 0;
